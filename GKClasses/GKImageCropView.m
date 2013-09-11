@@ -109,7 +109,47 @@ static CGRect GKScaleRect(CGRect rect, CGFloat scale)
     CGImageRef imageRef = CGImageCreateWithImageInRect([self.imageToCrop CGImage], visibleRect);
     UIImage *result = [UIImage imageWithCGImage:imageRef scale:self.imageToCrop.scale orientation:self.imageToCrop.imageOrientation];
     CGImageRelease(imageRef);
+    
+    result = [self squareImage:result forVisibleRect:visibleRect];
     return result;
+}
+
+- (UIImage*)squareImage:(UIImage*)originalImage forVisibleRect:(CGRect)rect
+{
+    if (originalImage.size.height == originalImage.size.width) {
+        return originalImage;
+    }
+    
+    UIImage *bottomImage = [self imageFromColor:[UIColor blackColor]]; //background image
+    UIImage *image       = originalImage; //foreground image
+    
+    CGSize newSize = rect.size;
+    UIGraphicsBeginImageContext( newSize );
+    
+    // Use existing opacity as is
+    [bottomImage drawInRect:CGRectMake(0,0,newSize.width,newSize.height)];
+    
+    // Apply supplied opacity if applicable
+    [image drawInRect:CGRectMake(newSize.width/2.f - image.size.width/2.f,
+                                 newSize.height/2.f - image.size.height/2.f,
+                                 image.size.width,
+                                 image.size.height) blendMode:kCGBlendModeNormal alpha:1.f];
+    
+    UIImage *squareImage = UIGraphicsGetImageFromCurrentImageContext();
+    
+    UIGraphicsEndImageContext();
+    return squareImage;
+}
+
+- (UIImage *) imageFromColor:(UIColor *)color {
+    CGRect rect = CGRectMake(0, 0, 1, 1);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);
+    UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return img;
 }
 
 - (CGRect)_calcVisibleRectForResizeableCropArea{
