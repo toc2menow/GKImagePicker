@@ -131,10 +131,9 @@ static CGRect GKScaleRect(CGRect rect, CGFloat scale)
     
     // Apply supplied opacity if applicable
     [image drawInRect:CGRectMake(newSize.width/2.f - image.size.width/2.f,
-                                 newSize.height/2.f - image.size.height/2.f,
-                                 image.size.width,
-                                 image.size.height) blendMode:kCGBlendModeNormal alpha:1.f];
-    
+                                newSize.height/2.f - image.size.height/2.f,
+                                image.size.width,
+                                 image.size.height)];
     UIImage *squareImage = UIGraphicsGetImageFromCurrentImageContext();
     
     UIGraphicsEndImageContext();
