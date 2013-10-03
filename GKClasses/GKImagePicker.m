@@ -10,7 +10,7 @@
 #import "GKImageCropViewController.h"
 
 @interface GKImagePicker ()<UIImagePickerControllerDelegate, UINavigationControllerDelegate, GKImageCropControllerDelegate>
-@property (nonatomic, strong, readwrite) UIImagePickerController *imagePickerController;
+@property (nonatomic, strong, readwrite) GKImagePickerController *imagePickerController;
 - (void)_hideController;
 @end
 
@@ -31,7 +31,7 @@
         
         self.cropSize = CGSizeMake(320, 320);
         self.resizeableCropArea = NO;
-        _imagePickerController = [[UIImagePickerController alloc] init];
+        _imagePickerController = [[GKImagePickerController alloc] init];
         _imagePickerController.delegate = self;
         _imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     }
